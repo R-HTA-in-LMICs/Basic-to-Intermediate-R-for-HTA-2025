@@ -8,13 +8,13 @@ The following sections provide a breakdown of the primary documents and guidance
 
 ## Navigation
 
-The [`R`]() folder stores the primary code script used during the tutorials..
+The [`R`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R) folder stores the primary code script used during the tutorials..
 
-The [`resources`]() folder stores the primary code script used during the tutorials.
+The [`resources`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/resources) folder stores the primary code script used during the tutorials.
 
 ## Preliminaries
 
--   Install `tidyverse`, `ggplot2`, `dplyr`, and `rvest` from [CRAN](https://cran.r-project.org), which are R packages used for survival analysis. Then, install `devtools` to install the [`darthtools`](https://github.com/DARTH-git/darthtools) package, which is an R package from [DARTH's GitHub](https://github.com/DARTH-git). See below:
+-   Install `tidyverse`, `ggplot2`, `dplyr`, and `rvest` from [CRAN](https://cran.r-project.org), which are R packages used for survival analysis. See example below:
 
 ```{r, eval=FALSE}
 # For the survival analysis, install the following packages from CRAN
@@ -22,16 +22,6 @@ install.packages("tidyverse")
 install.packages("ggplot2")
 install.packages("dplyr")
 install.packages("rvest")
-```
-
--   then install `darthtools` using `devtools`
-
-```{r, eval=FALSE}
-# Install devtools from CRAN
-install.packages("devtools")
-
-# Install development DARTH tools package from GitHub
-devtools::install_github("DARTH-git/darthtools")
 ```
 
 # Additional Information
