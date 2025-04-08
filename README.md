@@ -1,8 +1,8 @@
-# Basic to Intermediate R for HTA 2024:
+# Basic to Intermediate R for HTA 2025:
 
 <img src="img/logo.png" width="260" height="200" align="right"/>
 
-This repository stores the code, presentations, and material used in the R-HTA in LMICs introductory 2024 tutorial.
+This repository stores the code, presentations, and material used in the R-HTA in LMICs basic to intermediate 2025 tutorials.
 
 The following sections provide a breakdown of the primary documents and guidance on how to use them for your own personal training. The tutorial is based on several open-source frameworks for basic survival analysis in R.
 
