@@ -17,7 +17,7 @@ The [`resources`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-
 -   Install `tidyverse`, `ggplot2`, `dplyr`, and `rvest` from [CRAN](https://cran.r-project.org), which are R packages used for survival analysis. See example below:
 
 ```{r, eval=FALSE}
-# For the survival analysis, install the following packages from CRAN
+# For the introduction to R workshop, install the following packages from CRAN
 install.packages("tidyverse")
 install.packages("ggplot2")
 install.packages("dplyr")
