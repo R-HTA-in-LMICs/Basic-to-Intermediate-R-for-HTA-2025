@@ -8,20 +8,20 @@ The following sections provide a breakdown of the primary documents and guidance
 
 ## Navigation
 
-The [`R`] folder stores any relevant raw data used during the tutorial.
+The [`R`]() folder stores the primary code script used during the tutorials..
 
-The [`analysis`] folder stores the primary code script used during the tutorial, illustrating how to generate Kaplan-Meier and Cox models.
+The [`resources`]() folder stores the primary code script used during the tutorials.
 
 ## Preliminaries
 
--   Install `survival`, `survminer`, `broom`, and `ggplot2` from [CRAN](https://cran.r-project.org), which are R packages used for survival analysis. Then, install `devtools` to install the [`darthtools`](https://github.com/DARTH-git/darthtools) package, which is an R package from [DARTH's GitHub](https://github.com/DARTH-git). See below:
+-   Install `tidyverse`, `ggplot2`, `dplyr`, and `rvest` from [CRAN](https://cran.r-project.org), which are R packages used for survival analysis. Then, install `devtools` to install the [`darthtools`](https://github.com/DARTH-git/darthtools) package, which is an R package from [DARTH's GitHub](https://github.com/DARTH-git). See below:
 
 ```{r, eval=FALSE}
 # For the survival analysis, install the following packages from CRAN
-install.packages("survival")
-install.packages("survminer")
-install.packages("broom")
+install.packages("tidyverse")
 install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("rvest")
 ```
 
 -   then install `darthtools` using `devtools`
@@ -33,10 +33,6 @@ install.packages("devtools")
 # Install development DARTH tools package from GitHub
 devtools::install_github("DARTH-git/darthtools")
 ```
-
-## Citations
-
-For syntax consistency, we follow the R syntax framework developed by the DARTH group: - Alarid-Escudero F, Krijkamp EM, Pechlivanoglou P, Jalal HJ, Kao SYZ, Yang A, Enns EA. [A Need for Change! A Coding Framework for Improving Transparency in Decision Modeling](https://link.springer.com/article/10.1007/s40273-019-00837-x). [PharmacoEconomics](https://www.springer.com/journal/40273), 2190;37(11):1329--1339. <https://doi.org/10.1007/s40273-019-00837-x>
 
 # Additional Information
 
