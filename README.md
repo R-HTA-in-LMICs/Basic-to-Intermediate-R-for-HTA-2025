@@ -8,7 +8,7 @@ The following sections provide a breakdown of the primary documents and guidance
 
 ## Navigation
 
-The [`R`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R) folder stores the primary code script used during the tutorials..
+The [`R`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R) folder stores the primary code script used during the tutorials.
 
 The [`resources`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/resources) folder stores the primary code script used during the tutorials.
 
