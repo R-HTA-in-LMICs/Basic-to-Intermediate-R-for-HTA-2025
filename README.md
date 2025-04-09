@@ -4,7 +4,7 @@
 
 This repository stores the code, presentations, and material used in the R-HTA in LMICs basic to intermediate 2025 tutorials.
 
-The following sections provide a breakdown of the primary documents and guidance on how to use them for your own personal training. The tutorial is based on several open-source frameworks for basic survival analysis in R.
+The following sections provide a breakdown of the primary documents and guidance on how to use them for your own personal training.
 
 ## Navigation
 
