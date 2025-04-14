@@ -1,5 +1,5 @@
 #####
-# R Data Visualization
+# R Data Visualization R for HTA in LMICs
 #####
 # Update: 04/07/2025 by Satoshi Koiso
 
@@ -27,7 +27,7 @@ heat <- read.csv("2.heatmap_data.csv")
 
 # check the imported data
 str(arv) # str means "structure". This function shows data by column with data types
-view(arv) # a new tab will pop up. This is more intuitive and looks similar to MS Excel.
+View(arv) # a new tab will pop up. This is more intuitive and looks similar to MS Excel.
 
 
 # 1. Histogram ------------------------------------------------------------
@@ -222,7 +222,7 @@ arv_2020_spread <- arv_2020 %>%
     spread(key = gender, value = value)
 
 # check the data table
-view(arv_2020_spread)
+View(arv_2020_spread)
 
 # plot
 ggplot(data=arv_2020_spread, # specify data
@@ -320,7 +320,7 @@ param_order
 width <- 0.95
 
 # read and modify data
-tornado_plot <- tornado %>%
+tornado_data <- tornado %>%
   # change the structure of the datatable
   gather(key = "min_max",value = "value",max,min) %>% 
   # calculate the positions of apexes of rectangles
@@ -331,11 +331,11 @@ tornado_plot <- tornado %>%
          xmax=as.numeric(parameter)+width/2)
 
 # check the data
-view(tornado_plot)
+View(tornado_data)
          
 ## 5.2 Plot ----------------------------------------------------
 # plot
-ggplot(data = tornado_plot,
+ggplot(data = tornado_data,
        aes(ymax=ymax, # set each apex
            ymin=ymin, 
            xmax=xmax, 
@@ -372,7 +372,7 @@ ggplot(data = tornado_plot,
                linewidth = 1) +
   # add annotation of the vertical line
   annotate("text", # set annotation type
-           x = max(tornado_plot$xmax) + 0.7, y = basecasevalue, # set the position
+           x = max(tornado_data$xmax) + 0.7, y = basecasevalue, # set the position
            label = paste0("Base Case = ", basecasevalue)) +
   coord_flip() # rotate the plot 90 degree
 
@@ -382,7 +382,7 @@ ggplot(data = tornado_plot,
 
 # 6. Heatmap ---------------------------------------------------------
 # check the data
-view(heat)
+View(heat)
 
 
 ## 6.1. Data manipulation ----------------------------------------------------
@@ -406,7 +406,7 @@ heat$y_labels = paste0(
   " (",heat$Tx_cost_times, "x)")
 
 # check the data
-view(heat)
+View(heat)
 
 
 ## 6.2. Plot ----------------------------------------------------
