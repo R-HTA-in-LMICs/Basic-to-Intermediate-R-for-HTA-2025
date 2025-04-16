@@ -1,0 +1,4 @@
+- source: R_HTA_Workshop_day2.qmd
+  quarto-pub:
+    - id: af4d9327-8368-47b8-b766-dc2e9dc4676f
+      url: 'https://islem.quarto.pub/r-workshop-part-2-r-for-data-manipulation--web-scraping-using-dplyr--rvest'

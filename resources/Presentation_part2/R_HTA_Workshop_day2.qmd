@@ -1,0 +1,502 @@
+---
+title: "R Workshop Part 2: R for Data Manipulation & Web Scraping using dplyr & rvest"
+include-in-header:
+  - text: |
+      <style>
+      #title-slide .title {
+        font-size: 1.1em;
+        color: #00BFFF;
+      }
+      </style>
+      
+      
+author: Islem Meherzi
+date: 16 Apr 2025
+
+format: 
+  revealjs:
+    css: styles.css
+    footer: "R-HTA in LMICs Workshop Day 2"
+    transition: slide
+    slideNumber: "c/t"
+    title-slide-attributes: 
+      data-background-image: images/blu.jpg
+
+editor: visual
+execute:
+  echo: true
+  code-fold: true
+---
+
+# Learning Outcomes {.center background-image="images/blu.jpg"}
+
+::: {style="font-size: 25px;"}
+1.  Understand dplyr for efficient data manipulation
+2.  Gain hands-on experience with web scraping in R using the rvest package, extracting real-world drug information
+3.  Learn step-by-step how to apply data scraping techniques to collect, clean, and analyze data for HTA context.
+:::
+
+# [ 1. Data wrangling with dplyr ]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+::: {style="font-size: 20px;"}
+**dplyr** is a grammar of data manipulation in R, designed to make data transformation easy, readable, and efficient. It provides a consistent set of Functions that help you solve the most common data manipulation tasks.
+
+```{r}
+#| echo: false
+library(knitr)
+library(dplyr)
+
+# Create a data frame for the functions and their purposes
+functions_df <- data.frame(
+  Verb = c("filter()", "select()", "mutate()", "arrange()", "summarise()", 
+           "group_by()", "*_join()", "slice()"),
+  Purpose = c("Select rows based on conditions",
+              "Choose columns by name or position",
+              "Add or modify columns",
+              "Sort rows by column values",
+              "Collapse data into summary stats",
+              "Group data for grouped operations",
+              "Combine data frames (e.g. left_join())",
+              "Select rows by position")
+)
+
+
+# Display the table using kable
+kable(functions_df, caption = "Main Functions in Data Manipulation")
+
+```
+:::
+
+------------------------------------------------------------------------
+
+## [ 1. Data wrangling with dplyr : Example ]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+```{r,eval=FALSE}
+
+# --------------------------------------------------------------------------------------------------------------
+# --------------        Introduction to data manipulation in R using the dplyr    ---------------------------------
+# --------------------------------------------------------------------------------------------------------------
+
+
+
+# Load necessary libraries
+library(dplyr)
+
+# -------------------------------understand %>%  
+
+# CTRL + SHIFT + M, is used in RStudio to quickly insert the pipe operator (%>%).
+# pipe operator (%>%) in R, primarily from the dplyr package, allows you to pass
+# the result of one function directly into the next function, making your code more 
+# readable and concise by chaining operations.
+
+# ------------------------------- Example:
+
+# Create a simple dataframe
+df <- data.frame(
+  ID = 1:5,
+  Age = c(25, 30, 35, 40, 45),
+  Score = c(80, 85, 90, 95, 100)
+)
+
+# Without pipe: Nested function calls or creation of many variables seq
+result <- sum(sqrt(df$Score[df$Age > 30]))
+
+print(result)
+# or : many code operations & variables creation
+# var1 <- df$Score[df$Age > 30]
+# var2 <- sqrt(var1)
+# result <- sum(var2)
+# print(result)
+
+
+# With pipe: Chaining operations
+result <- df %>%
+  filter(Age > 30) %>%  # Filter rows where Age > 30
+  pull(Score) %>%       # Extract the Score column
+  sqrt() %>%            # Apply sqrt() to the Score values
+  sum()                 # Sum the square roots
+
+print(result)
+
+# -------------------------------
+
+
+# Sample data: in hta context
+# Each row represents a technology evaluated
+hta_data <- data.frame(
+  Technology = c("Drug A", "Drug B", "Device X", "Procedure Y"),
+  Cost = c(5000, 7000, 12000, 4000),             # in USD
+  QALY_Gain = c(1.2, 1.5, 2.0, 0.8),             # Quality-Adjusted Life Years
+  Effectiveness_Score = c(85, 90, 92, 70)        # From 0 to 100
+)
+ # QALY: Quality-Adjusted Life Years: A measure that combines both quantity and quality of life.
+  # 1 QALY = 1 year of life in perfect health.
+  # QALY Gain tells us how much healthier life a treatment provides.
+  # QALY gain represents the total health benefit (in QALY) gained from a treatment
+  # or intervention. It combines both the length of life and the quality of that
+  # life over time.
+print(hta_data)
+
+# -------------------------------
+# 1. mutate(): Create new columns or transform specific columns
+
+hta_data <- hta_data %>%
+  # The Cost-Effectiveness Ratio (CER) can be used to compare 
+  # treatments by measuring cost per unit of health gain (like QALY).
+  mutate(
+    CER = Cost / QALY_Gain  # Cost-Effectiveness Ratio
+  )
+print(hta_data)
+
+# -------------------------------
+# relocate:reorder the columns 
+# of a data frame by moving specified columns to a new position.
+
+hta_data <- hta_data %>%
+  relocate(CER,.after = QALY_Gain)
+print(hta_data)
+
+
+# -------------------------------
+# 2. mutate_at(): Apply a transformation to specific columns
+
+# Example: convert scores from 0-100 to a 0-1 scale for selected variables
+hta_data <- hta_data %>%
+  # For the column Effectiveness_Score, divide its values by 100.
+  mutate_at(
+    vars(Effectiveness_Score), 
+    ~ . / 100 
+  )
+print(hta_data)
+
+# ~ means: “Apply the following expression to each element or column.”
+#  The dot . represents the current item (like a column or set columns)
+
+# -------------------------------
+# 3. mutate_all(): Apply a transformation to all numeric columns
+# select() : to select columns by index or name or to unselect using - 
+
+# select(-Technology) removes colimn 'Technology' the character column
+# First, exclude the character column 'Technology'
+hta_data_transformed <- hta_data %>%
+  select(-Technology) %>%           # Remove the text column temporarily
+  mutate_all(~ . * 10)            # Multiply all columns by 10
+  
+print(hta_data_transformed)
+# -------------------------------
+#4. group_by() function is used to split your data into groups based on one or more columns.
+# It is typically used before summarizing or mutating, so you can apply calculations 
+# within each group!
+
+
+# Add a new column: Technology_Type
+final_hta_data <- hta_data_transformed %>%
+  mutate(
+    Technology_Type = c("Drug", "Drug", "Device", "Procedure")
+  )
+
+print(final_hta_data)
+# Group by Technology_Type and calculate average cost and average QALY
+hta_summary <- final_hta_data %>%
+  group_by(Technology_Type) %>%
+  # summarise() reduces multiple rows into a single summary row,
+  # either per group (when used with group_by()) or for the entire dataset.
+  mutate( #explore the diff between summarize and mutate here
+    Avg_Cost = mean(Cost),
+    Avg_QALY = mean(QALY_Gain),
+    Max_Effectiveness = max(Effectiveness_Score)
+  )
+print(hta_summary)
+
+```
+
+# <span style="font-size: 40px"> 2. R in Action: Real-World Use Cases<span/> {.center background-image="images/blu.jpg"}
+
+![Examples of R real worlds applications and used packages](images/R_use_cases.png){width="1500"}
+
+## [2.1 Data Scraping Example: Extract & Analyze drug names and prices]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+::: {style="font-size: 15px;"}
+**Web/Data** scraping is the process of automatically collecting information from websites. A tool or script accesses a website, extracts the desired data, and organizes it in a usable format.
+:::
+
+![](images/flowchart_drug_names_prices_extraction.png){fig-align="center" width="1700"}
+
+------------------------------------------------------------------------
+
+## [ 2.2 Web Scraping in R: Key Functions of the rvest Package]{style="font-size: 40px"} {background-image="images/blu.jpg"}
+
+::: {style="font-size: 30px;"}
+The main package used for web scraping in R is **rvest**, and its key functions include:
+
+**read_html()** – Loads and parses the HTML content of a webpage or local HTML file.
+
+**html_nodes()** – Selects multiple elements from the HTML using CSS or XPath selectors.
+
+**html_attr()** – Extracts the value of a specific attribute (e.g., href, class) from selected elements.
+
+**html_text()** – Extracts and returns the visible text content from selected elements.
+:::
+
+------------------------------------------------------------------------
+
+## [2.2.1 Scraping Drug names & prices example: main webpage]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+::: {style="font-size: 15px;"}
+To scrape drug names and prices, the first step is to extract data from the main page of of the target website : [https://www.drugs.com/price-guide,](https://www.drugs.com/price-guide/){.uri} which provides general drug lists.
+:::
+
+<img src="images/Drugs_page1.png" class="fragment" width="400"/> <img src="images/Drugs_page1_1_inspect.png" class="fragment" width="300"/><img src="images/Drugs_page1_inspect.png" class="fragment" width="300"/>
+
+------------------------------------------------------------------------
+
+### main webpage: code in R {background-image="images/blu.jpg"}
+
+```{r, eval=FALSE}
+# ------- 1.1) Page 1: Get all lists of drugs 
+
+# Base URL
+target_site_url <- "https://www.drugs.com/price-guide"
+# Read the page
+main_page_html <- read_html(target_site_url)
+
+# Extract drug links and names
+drug_links_1 <- main_page_html %>%
+  html_nodes("div.ddc-grid div.ddc-grid-col-6 li a") %>% #ul
+  html_attr("href") %>%
+  na.omit()
+drug_links_1
+drug_names_1 <- main_page_html %>%
+  html_nodes("div.ddc-grid div.ddc-grid-col-6 li a") %>%
+  html_text() %>%
+  #remove Leading/Trailing Whitespace 
+  trimws()
+
+# Convert relative links to full URLs
+base_url="https://www.drugs.com"
+drug_links <- paste0(base_url, drug_links_1)
+
+# Store in dataframe
+lists_drug_data <- data.frame(Drug = drug_names_1, URL = drug_links_1, stringsAsFactors = FALSE)
+
+
+```
+
+## [2.2.3 Scraping Drug Names & Prices: Second Webpage Example]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+::: {style="font-size: 15px;"}
+In this step, we extract detailed drug information for each item listed on the previous page.
+:::
+
+<img src="images/Drugs_page2.png" class="fragment" width="400"/><img src="images/Drugs_page2_1.png" class="fragment" width="300"/> <img src="images/Drugs_page2_inspect.png" class="fragment" width="300"/>
+
+------------------------------------------------------------------------
+
+### Second Webpage Example: code in R {.center background-image="images/blu.jpg"}
+
+```{r, eval=FALSE}
+druglistpage_exple <- "https://www.drugs.com/price-guide-d1.html"
+
+# Read the HTML content into rvest
+druglistpage_html <- read_html(druglistpage_exple)
+
+# Extract the names and links (href attributes)
+drug_links_2 <- druglistpage_html %>%
+  html_nodes("ul.ddc-list-column-2 a") %>%
+  html_attr("href")
+
+drug_names_2 <- druglistpage_html %>%
+  html_nodes("ul.ddc-list-column-2 a") %>%
+  html_text()
+
+# Combine the names and links in a data frame
+data_ex <- data.frame(Name = drug_names_2, Link = drug_links_2)
+
+# View the data
+print(data_ex)
+```
+
+------------------------------------------------------------------------
+
+## [2.2.3 Scraping Drug Variants & Prices: Final Webpage Example]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+::: {style="font-size: 15px;"}
+In this step, we extract detailed drug variants and their prices from the last webpage.
+:::
+
+<img src="images/Drugs_page3.png" class="fragment" width="300"/> <img src="images/Drugs_page3_inspect1.png" class="fragment" width="300"/> <img src="images/Drugs_page3_inspect2.png" class="fragment" width="400"/>
+
+------------------------------------------------------------------------
+
+### Final Webpage Example: code in R {.center background-image="images/blu.jpg"}
+
+```{r,eval=FALSE}
+drug_url <- "https://www.drugs.com/price-guide/abilify"
+# Read the webpage
+drug_html_content <- read_html(drug_url)
+# Extract drug names, all details of the two parts 
+drug_names_part1  <- drug_html_content %>%
+  html_nodes("span.ddc-grid-col-7 b") %>%
+  html_text()
+drug_names_part2 <- drug_html_content %>%
+  html_nodes("span.ddc-grid-col-7 p") %>%
+  html_text()
+
+drug_names_part1
+drug_names_part2
+
+drug_full_name <- paste(drug_names_part1,drug_names_part2,sep = ", ")
+# Extract drug prices
+drug_prices <- drug_html_content %>%
+  html_nodes("span.ddc-grid-col-5 b") %>%
+  html_text()
+
+# Create a data frame
+drug_data <- data.frame(
+  Drug = drug_full_name,
+  Price = drug_prices,
+  stringsAsFactors = FALSE
+)
+# Print the result
+print(drug_data)
+```
+
+------------------------------------------------------------------------
+
+## [Hands-on Exercise : Test Data Scraping with rvest]{style="font-size: 40px"} {.center background-image="images/blu.jpg"}
+
+```{r,eval=FALSE}
+
+    # ================================================================
+    #  EXERCISE – Web Scraping: Drug Variants and Prices
+    # ================================================================
+    
+    # ------------------------------------------------
+    #  Step 0: Load Required Libraries
+    # ------------------------------------------------
+    # These packages are needed for web scraping and data manipulation
+    library(rvest)   # Web scraping
+    library(dplyr)   # Data wrangling
+    
+    # ------------------------------------------------
+    # ✅  Task 2.1 – Understand the Example Code
+    # ------------------------------------------------
+    
+    # Below is a working example to extract drug names and prices 
+    # from the page for "Isosorbide Mononitrate"
+    # Run each block and observe the output to understand what it does
+    
+    # Define the URL of the drug page
+    drug_url <- "https://www.drugs.com/price-guide/isosorbide-mononitrate"
+    
+    # Read the HTML content of the webpage
+    drug_html_content <- read_html(drug_url)
+    
+    # Extract the first part of the drug names (variant names)
+    drug_names_part1  <- drug_html_content %>%
+      html_nodes("span.ddc-grid-col-7 b") %>%
+      html_text()
+    
+    print(drug_names_part1)  # Show extracted variant names
+    
+    # Extract the second part of the drug details (dose, form)
+    drug_names_part2 <- drug_html_content %>%
+      html_nodes("span.ddc-grid-col-7 p") %>%
+      html_text()
+    
+    print(drug_names_part2)  # Show additional details
+    
+    # Combine the two parts to get full drug names
+    drug_full_name <- paste(drug_names_part1, drug_names_part2, sep = ", ")
+    
+    print(drug_full_name)  # Show full names
+    
+    # Extract the prices for each variant
+    drug_prices <- drug_html_content %>%
+      html_nodes("span.ddc-grid-col-5 b") %>%
+      html_text()
+    
+    print(drug_prices)  # Show prices
+    
+    # Create a data frame combining names and prices
+    drug_data <- data.frame(
+      Drug = drug_full_name,
+      Price = drug_prices,
+      stringsAsFactors = FALSE
+    )
+    
+    # Display the final result
+    print(drug_data)
+    
+    # ------------------------------------------------
+    #  Task 2.2 – Test with Another Drug
+    # ------------------------------------------------
+    
+    # Go to: https://www.drugs.com/price-guide-d1.html
+    # ✅ Choose any other drug from the list (e.g., Alunbrig, Demerol, etc.)
+    # 🛠️ Replace the drug_url value below with the URL of your chosen drug
+    # Then re-run the full script to see the results for your new drug
+    
+    # Example:
+    # drug_url <- "https://www.drugs.com/price-guide/alunbrig"
+    
+    # ------------------------------------------------
+    # ✅ Task 2.3 – Transform into a Reusable Function
+    # ------------------------------------------------
+    
+    # YOUR TASK: Create a function named Get_Drug_Details()
+    # ------------------------------------------------
+    # Objective: Reuse the same logic as above to extract drug variants + prices for a given drug name
+    # What you should do:
+    #   - Create a new function called Get_Drug_Details
+    #   - It should take one argument: drug_name
+    #   - Inside the function, copy the exact same steps from above (read HTML, extract, combine, return)
+    #   - The function should return a dataframe with 2 columns: Drug and Price
+    
+    
+    # Function definition :
+    
+    Get_Drug_Details <- # Your code goes here
+    
+    
+    # ------------------------------------------------
+    # Test Your Function
+    # ------------------------------------------------
+    #  After creating the function, test it using a valid drug name:
+    
+    # Example test:
+    Get_Drug_Details("alunbrig")
+    
+    # ------------------------------------------------
+    #  Task 2.4 – Export the Extracted Data to CSV
+    # ------------------------------------------------
+    
+    # ✅ Now that you can extract drug names and prices using your function,
+    # try saving the results into a CSV file.
+    
+    # Task:
+    # 1. Use your function `Get_Drug_Details()` with a drug URL of your choice.
+    # 2. Save the returned data frame into a CSV file using an appropriate function.
+    
+    # Hint:
+    # - Use the function `write.csv()` to write the data into a file.
+    # - Check the available arguments of the function using `?write.csv`.
+    # - Use `getwd()` to find the current working directory where your CSV will be saved.
+    
+    # Example idea:
+    
+    # drug_data <- Get_Drug_Details("...")
+    # write.csv(...)
+    
+    # Output: You should find a CSV file in your working directory.
+```
+
+# Let's Connect! {.center background-image="images/blu.jpg"}
+
+::: center
+**Email:** [meherziislem\@gmail.com](mailto:meherziislem@gmail.com)
+
+**LinkedIn:** <a href='https://www.linkedin.com/in/islem-meherzi-bba309b3/' target='_blank'>islem-meherzi-linkedin-profile</a>
+:::
+
+# THANK YOU! {.center background-image="images/blu.jpg"}
