@@ -9,8 +9,8 @@ The following sections provide a breakdown of the primary documents and guidance
 ## Navigation
 
 The [`R`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R) folder stores the primary code script used during the tutorials.
-- The ['Day 1'](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R/Day%201) sub-folder stores all scripts used on the day 1 workshop.
-- The ['Day 2'](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R/Day%202) sub-folder stores all scripts used on the day 2 workshop.
+- The [`Day 1`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R/Day%201) sub-folder stores all scripts used on the day 1 workshop.
+- The [`Day 2`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/R/Day%202) sub-folder stores all scripts used on the day 2 workshop.
 
 The [`resources`](https://github.com/R-HTA-in-LMICs/Basic-to-Intermediate-R-for-HTA-2025/tree/main/resources) folder stores the primary code script used during the tutorials.
 
