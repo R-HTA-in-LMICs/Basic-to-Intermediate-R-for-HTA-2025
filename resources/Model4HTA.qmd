@@ -1,0 +1,139 @@
+---
+title: "Choosing the Right Economic Model for HTA"
+author: "Joshua Soboil"
+date: "2025-04-16"
+format: pptx
+---
+
+## Learning Objectives
+
+- Understand the role of economic models in health technology assessment (HTA)
+- Learn how different modelling frameworks align with different types of decision problems
+- Explore strengths, limitations, and appropriate contexts for common models
+
+---
+
+## What is HTA and Why Do We Use Models?
+
+- **HTA** is the multidisciplinary evaluation of the clinical, economic, and societal impact of health technologies (e.g., drugs, devices, diagnostics)
+- **Economic models** help synthesize data from multiple sources to estimate long-term outcomes, especially when clinical trials are short-term
+- Key use: inform reimbursement, pricing, and adoption decisions under uncertainty
+
+---
+
+## Why Model Choice Matters
+
+- The structure of your model influences:
+  - How accurately it reflects disease progression
+  - The transparency and credibility of your analysis
+  - The types of uncertainty that can be assessed
+- Choosing the wrong model can lead to:
+  - Biased cost-effectiveness estimates
+  - Overcomplexity or oversimplification
+  - Misalignment with decision-maker needs
+
+---
+
+## What Should Drive Your Choice?
+
+Before choosing a model, consider:
+
+- What is the **decision problem**? (e.g., reimbursement for a new drug?)
+- What are the **clinical pathways** or natural history of disease?
+- Does the problem involve:
+  - Time-dependence or recurrence?
+  - Heterogeneity among patients?
+  - Interaction between individuals?
+  - Resource constraints or queues?
+- How much **data** is available?
+- What **level of complexity** is justifiable?
+
+---
+
+## Common Modelling Frameworks in HTA
+
+| Framework              | Use When                                  | Pros                         | Cons                           |
+|------------------------|--------------------------------------------|------------------------------|---------------------------------|
+| **Decision Tree**      | Short-term, one-off decisions              | Simple, fast                 | No memory or time cycle        |
+| **Markov Model**       | Chronic diseases, repeated events          | Handles long-term outcomes   | Assumes memoryless transitions |
+| **Microsimulation**    | Heterogeneous patients, complex rules      | Tracks individual histories  | Computationally intensive      |
+| **Discrete Event Sim** | Queuing, resource constraints, timing      | Highly flexible              | Requires programming/data       |
+| **Dynamic Model**      | Infectious disease with transmission       | Captures herd effects        | Very data-hungry & complex      |
+
+---
+
+## Decision Problem Examples
+
+**Example 1: Asthma treatment**  
+- Chronic condition with flare-ups  
+- Use a **Markov model** with health states (e.g., mild, moderate, severe, death)
+
+**Example 2: New surgical device**  
+- One-off use, short-term outcomes  
+- A **decision tree** may suffice
+
+**Example 3: Cancer immunotherapy**  
+- Time to event outcomes, variation in patient risk  
+- Consider **microsimulation** or **partitioned survival models**
+
+**Example 4: COVID-19 vaccination strategy**  
+- Infectious disease, transmission dynamics  
+- Needs a **dynamic transmission model**
+
+---
+
+## Strengths & Weaknesses Recap
+
+**Decision Tree**  
+✅ Transparent, intuitive  
+❌ Poor at modeling recurrence/time
+
+**Markov Model**  
+✅ Good for long-term, repeated events  
+❌ Assumes transitions depend only on current state
+
+**Microsimulation**  
+✅ Handles patient-level variation  
+❌ Requires large data and compute power
+
+**Discrete Event Simulation**  
+✅ Realistic modeling of queues/resources  
+❌ Harder to validate and explain
+
+**Dynamic Models**  
+✅ Can model disease spread and indirect effects  
+❌ Often impractical without strong data
+
+---
+
+## Practical Advice
+
+- **Start simple.** Only add complexity when justified by the decision problem or available data.
+- Sketch the **disease progression** before picking your model
+- Be transparent about assumptions — especially structural ones
+- **Consult with stakeholders** early to understand decision-makers’ needs
+- If unsure, pilot more than one structure in parallel
+
+---
+
+## Common Pitfalls
+
+- Using complex models without sufficient data or justification
+- Ignoring structural uncertainty
+- Poor documentation of assumptions or rationale
+- Selecting a model based on analyst preference rather than fit-for-purpose
+
+---
+
+## Key Takeaways
+
+- Model choice is driven by the **decision context**, **disease characteristics**, and **data availability**
+- Simpler models are often better — complexity does not always equal accuracy
+- Use the model that best reflects the **real-world decision** without overfitting
+
+---
+
+## Questions?
+
+Thanks for listening!  
+Let’s open the floor to any questions or discussion.
